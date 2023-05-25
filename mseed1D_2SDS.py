@@ -1,15 +1,19 @@
 #!/usr/bin/env python
 """
-Script to convert MSEED data to SEISCOMP DATA STRUCTURE by Channel
-The code is meant to work with 1 day or near 1 day duration data
-Requirements: Obspy 
-Usage: mseed1D_SDS.py input_file.mseed
+Script to convert MSEED data to SEISCOMP DATA STRUCTURE by Channel.
+The code is meant to work with 1 day or near 1 day duration data.
 
-N Perez nperez@sgc.gov.co
-F munoz fjmunozb@unal.edu.co
+Requirements:
+    * ObsPy 
+    
+.. rubric:: Example
 
+>>> python mseed1D_SDS.py input_file.mseed
 
+Date: May 2023
+Author: N. Perez (nperez@sgc.gov.co), F. Munoz (fjmunozb@unal.edu.co)
 """
+
 from obspy.core import UTCDateTime
 from obspy.core import read
 import numpy as np
@@ -18,13 +22,13 @@ import sys
 import os
 import shutil
 
-if len(sys.argv)<2:
+if len(sys.argv) < 2:
         print("Check your input")
         sys.exit()
 
 for file in sys.argv[1:]:
     st = read(file)
-    st.merge(method=1, fill_value='interpolate')
+    st.merge(method=1, fill_value="interpolate")
     if len(st)>3:
         stZ = st.select(channel='*Z')
         stZ.merge()
@@ -42,7 +46,6 @@ for file in sys.argv[1:]:
                 tr.data = tr.data.filled()
     else:
         st1 = st.copy()
-
 
     for tr in st1:
         tr.stats.network = 'DP' #change the name of your network
